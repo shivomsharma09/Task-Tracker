@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-const PROD_API = 'https://task-tracker--production-2671.up.railway.app/api';
+const PROD_API = 'https://task-tracker-production-2671.up.railway.app/api';
 const DEV_API  = 'http://localhost:5000/api';
 
 const baseQuery = fetchBaseQuery({
