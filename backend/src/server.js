@@ -1,0 +1,77 @@
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const helmet = require('helmet');
+const morgan = require('morgan');
+const http = require('http');
+const { Server } = require('socket.io');
+
+const connectDB = require('./config/db');
+const { notFound, errorHandler } = require('./middleware/errorMiddleware');
+
+const authRoutes = require('./routes/authRoutes');
+
+// Connect to Database
+connectDB();
+
+const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  },
+});
+
+// Middleware
+app.use(express.json());
+app.use(cors());
+app.use(helmet());
+app.use(morgan('dev'));
+
+// Socket.io injection middleware
+app.use((req, res, next) => {
+  req.io = io;
+  next();
+});
+
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/projects', require('./routes/projectRoutes'));
+app.use('/api/projects/:projectId/tasks', require('./routes/taskRoutes'));
+app.use('/api/tasks', require('./routes/taskRoutes'));
+app.use('/api/analytics', require('./routes/analyticsRoutes'));
+app.use('/api/admin', require('./routes/adminRoutes'));
+
+app.get('/', (req, res) => {
+  res.send('TaskFlow Pro API is running...');
+});
+
+// Socket.io Connections
+io.on('connection', (socket) => {
+  console.log('New WebSocket connection:', socket.id);
+
+  socket.on('setup', (userData) => {
+    socket.join(userData._id);
+    socket.emit('connected');
+  });
+
+  socket.on('join project', (project) => {
+    socket.join(project);
+    console.log('User Joined Project: ' + project);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('User disconnected');
+  });
+});
+
+// Error Handling Middleware
+app.use(notFound);
+app.use(errorHandler);
+
+const PORT = process.env.PORT || 5000;
+
+server.listen(PORT, () => {
+  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+});
