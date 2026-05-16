@@ -17,36 +17,16 @@ connectDB();
 const app = express();
 const server = http.createServer(app);
 
-// Allowed origins: env var (comma-separated) + hardcoded production frontend as fallback
-const allowedOrigins = [
-  'https://task-tracker-production-9778.up.railway.app', // production frontend (hardcoded)
-  'http://localhost:5173',                                // local dev
-  ...(process.env.FRONTEND_URL
-    ? process.env.FRONTEND_URL.split(',').map(o => o.trim())
-    : []),
-];
-
-const corsOptions = {
-  origin: (origin, callback) => {
-    // Allow requests with no origin (e.g., curl, Postman, server-to-server)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) return callback(null, true);
-    callback(new Error(`CORS: origin ${origin} not allowed`));
-  },
-  credentials: true,
+// Simple, bulletproof CORS — allow all origins
+// (avoids callback-based origin check issues in Express 5)
+app.use(cors({
+  origin: '*',
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-};
-
-// Apply CORS first — before all other middleware so OPTIONS preflight is handled
-// cors() automatically handles OPTIONS preflight (no explicit app.options needed)
-app.use(cors(corsOptions));
+}));
 
 const io = new Server(server, {
-  cors: {
-    origin: allowedOrigins,
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  },
+  cors: { origin: '*', methods: ['GET', 'POST', 'PUT', 'DELETE'] },
 });
 
 // Middleware
