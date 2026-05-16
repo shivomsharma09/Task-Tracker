@@ -16,17 +16,42 @@ connectDB();
 
 const app = express();
 const server = http.createServer(app);
+
+// Allowed origins: env var (comma-separated) + hardcoded production frontend as fallback
+const allowedOrigins = [
+  'https://task-tracker-production-9778.up.railway.app', // production frontend (hardcoded)
+  'http://localhost:5173',                                // local dev
+  ...(process.env.FRONTEND_URL
+    ? process.env.FRONTEND_URL.split(',').map(o => o.trim())
+    : []),
+];
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Allow requests with no origin (e.g., curl, Postman, server-to-server)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    callback(new Error(`CORS: origin ${origin} not allowed`));
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+};
+
+// Apply CORS first — before all other middleware so OPTIONS preflight is handled
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // handle preflight for all routes
+
 const io = new Server(server, {
   cors: {
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+    origin: allowedOrigins,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
   },
 });
 
 // Middleware
 app.use(express.json());
-app.use(cors());
-app.use(helmet());
+app.use(helmet({ crossOriginResourcePolicy: false }));
 app.use(morgan('dev'));
 
 // Socket.io injection middleware
