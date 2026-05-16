@@ -53,9 +53,8 @@ app.use('/api/admin', require('./routes/adminRoutes'));
 const frontendDist = path.join(__dirname, '../../frontend/dist');
 app.use(express.static(frontendDist));
 
-// SPA catch-all — serve index.html for any non-API route
-// (Express 5 requires named wildcard syntax)
-app.get('/(.*)', (req, res) => {
+// SPA fallback — use app.use (not app.get) to avoid Express 5 path-to-regexp issues
+app.use((req, res) => {
   res.sendFile(path.join(frontendDist, 'index.html'));
 });
 
