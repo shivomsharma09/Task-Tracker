@@ -1,5 +1,4 @@
 require('dotenv').config();
-const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -49,16 +48,11 @@ app.use('/api/tasks', require('./routes/taskRoutes'));
 app.use('/api/analytics', require('./routes/analyticsRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes'));
 
-// Serve React frontend static files (built from frontend/dist)
-const frontendDist = path.join(__dirname, '../../frontend/dist');
-app.use(express.static(frontendDist));
+// Health check
+app.get('/', (req, res) => res.send('TaskFlow Pro API is running...'));
 
-// SPA fallback — use app.use (not app.get) to avoid Express 5 path-to-regexp issues
-app.use((req, res) => {
-  res.sendFile(path.join(frontendDist, 'index.html'));
-});
-
-// Error Handling Middleware (API errors only)
+// Error Handling Middleware
+app.use(notFound);
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
