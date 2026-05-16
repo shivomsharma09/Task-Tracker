@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: 'http://localhost:5000/api', // Will use proxy or env variable in production
+  baseUrl: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
   prepareHeaders: (headers, { getState }) => {
     const token = getState().auth.userInfo?.token;
     if (token) {

@@ -8,7 +8,7 @@ import io from 'socket.io-client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useDispatch, useSelector } from 'react-redux';
 
-const ENDPOINT = "http://localhost:5000";
+const ENDPOINT = import.meta.env.VITE_API_URL?.replace('/api', '') || "http://localhost:5000";
 let socket;
 
 const TASK_STATUSES = ['Todo', 'In Progress', 'Review', 'Completed'];
