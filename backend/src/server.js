@@ -1,4 +1,5 @@
 require('dotenv').config();
+const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -48,31 +49,17 @@ app.use('/api/tasks', require('./routes/taskRoutes'));
 app.use('/api/analytics', require('./routes/analyticsRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes'));
 
-app.get('/', (req, res) => {
-  res.send('TaskFlow Pro API is running...');
+// Serve React frontend static files (built from frontend/dist)
+const frontendDist = path.join(__dirname, '../../frontend/dist');
+app.use(express.static(frontendDist));
+
+// SPA catch-all — serve index.html for any non-API route
+// (Express 5 requires named wildcard syntax)
+app.get('/(.*)', (req, res) => {
+  res.sendFile(path.join(frontendDist, 'index.html'));
 });
 
-// Socket.io Connections
-io.on('connection', (socket) => {
-  console.log('New WebSocket connection:', socket.id);
-
-  socket.on('setup', (userData) => {
-    socket.join(userData._id);
-    socket.emit('connected');
-  });
-
-  socket.on('join project', (project) => {
-    socket.join(project);
-    console.log('User Joined Project: ' + project);
-  });
-
-  socket.on('disconnect', () => {
-    console.log('User disconnected');
-  });
-});
-
-// Error Handling Middleware
-app.use(notFound);
+// Error Handling Middleware (API errors only)
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
