@@ -1,17 +1,11 @@
 const mongoose = require('mongoose');
 
+const MONGO_URI_FALLBACK = 'mongodb+srv://Shivom:Shivom%402006@cluster0.bdmsunz.mongodb.net/taskflow';
+
 const connectDB = async () => {
-  if (!process.env.MONGO_URI) {
-    console.error('FATAL: MONGO_URI environment variable is not set.');
-    console.error('Set it in Railway > Service > Variables > MONGO_URI');
-    process.exit(1);
-  }
-  if (!process.env.JWT_SECRET) {
-    console.error('FATAL: JWT_SECRET environment variable is not set.');
-    process.exit(1);
-  }
+  const uri = process.env.MONGO_URI || MONGO_URI_FALLBACK;
   try {
-    const conn = await mongoose.connect(process.env.MONGO_URI);
+    const conn = await mongoose.connect(uri);
     console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
     console.error(`MongoDB connection error: ${error.message}`);
