@@ -39,8 +39,8 @@ const corsOptions = {
 };
 
 // Apply CORS first — before all other middleware so OPTIONS preflight is handled
+// cors() automatically handles OPTIONS preflight (no explicit app.options needed)
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); // handle preflight for all routes
 
 const io = new Server(server, {
   cors: {
