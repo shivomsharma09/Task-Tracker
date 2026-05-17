@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 // Layouts
 import MainLayout from './layouts/MainLayout';
 import AuthLayout from './layouts/AuthLayout';
+import { MagicBento } from './components/ui/MagicBento';
 
 // Pages
 import Login from './pages/Login';
@@ -37,12 +38,29 @@ function RoleRoute({ allowedRoles, children }) {
 function RoleDashboard() {
   const { userInfo } = useSelector((state) => state.auth);
   if (!userInfo) return <Navigate to="/login" replace />;
-  switch (userInfo.role) {
-    case 'QL': return <QLDashboard />;
-    case 'QR': return <QRDashboard />;
-    case 'Tasker':
-    default:   return <TaskerDashboard />;
-  }
+  
+  const DashboardComponent = () => {
+    switch (userInfo.role) {
+      case 'QL': return <QLDashboard />;
+      case 'QR': return <QRDashboard />;
+      case 'Tasker':
+      default:   return <TaskerDashboard />;
+    }
+  };
+
+  return (
+    <div className="flex flex-col gap-8 w-full max-w-[1200px] mx-auto">
+      <MagicBento 
+        enableStars={true}
+        enableSpotlight={true}
+        enableBorderGlow={true}
+        enableTilt={true}
+        enableMagnetism={true}
+        clickEffect={true}
+      />
+      <DashboardComponent />
+    </div>
+  );
 }
 
 function App() {
