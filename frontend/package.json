@@ -29,10 +29,11 @@
     "react-redux": "^9.3.0",
     "react-router-dom": "^7.15.1",
     "recharts": "^3.8.1",
+    "serve": "^14.2.4",
     "socket.io-client": "^4.8.3",
     "tailwind-merge": "^3.6.0",
-    "zod": "^4.4.3",
-    "serve": "^14.2.4"
+    "three": "^0.184.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

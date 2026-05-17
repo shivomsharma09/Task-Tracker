@@ -1,5 +1,6 @@
 import { Outlet, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { TubesBackground } from '../components/ui/TubesBackground';
 
 const AuthLayout = () => {
   const { userInfo } = useSelector((state) => state.auth);
@@ -9,15 +10,17 @@ const AuthLayout = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background/50 relative overflow-hidden">
-      {/* Decorative background elements for Glassmorphism */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary/20 blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-accent/20 blur-[120px] pointer-events-none" />
-      
-      <div className="w-full max-w-md z-10 relative">
-        <Outlet />
+    <TubesBackground>
+      <div className="min-h-screen flex items-center justify-center relative overflow-hidden pointer-events-none">
+        {/* Decorative background elements for Glassmorphism */}
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary/20 blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-accent/20 blur-[120px] pointer-events-none" />
+        
+        <div className="w-full max-w-md z-10 relative pointer-events-auto">
+          <Outlet />
+        </div>
       </div>
-    </div>
+    </TubesBackground>
   );
 };
 
