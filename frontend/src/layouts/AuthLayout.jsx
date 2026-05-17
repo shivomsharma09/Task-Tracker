@@ -15,7 +15,7 @@ const AuthLayout = () => {
       <div className="min-h-screen flex items-center justify-center relative overflow-hidden pointer-events-none dark">
         
         {/* Text Pressure Background Layer */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 -translate-y-32">
           <TextPressure 
             text="ETHARA AI" 
             className="text-[12vw] leading-none text-white/30 uppercase text-center"
