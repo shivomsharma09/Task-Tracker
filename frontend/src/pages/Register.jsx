@@ -77,7 +77,7 @@ const Register = () => {
   };
 
   return (
-    <div className="bg-card/90 backdrop-blur-sm border border-border p-8 rounded-2xl shadow-2xl w-full">
+    <div className="p-8 rounded-2xl shadow-2xl border border-border backdrop-blur-md bg-card/40 focus-within:bg-card/95 transition-all duration-300 w-full">
       <div className="text-center mb-7">
         <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/20 mb-3">
           <span className="text-primary font-bold text-lg">TF</span>

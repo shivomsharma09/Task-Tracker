@@ -35,7 +35,7 @@ const Login = () => {
   };
 
   return (
-    <div className="bg-card p-8 rounded-2xl shadow-xl border border-border backdrop-blur-sm bg-card/90">
+    <div className="p-8 rounded-2xl shadow-xl border border-border backdrop-blur-md bg-card/40 focus-within:bg-card/95 transition-all duration-300">
       <div className="text-center mb-8">
         <h1 className="text-3xl font-bold text-primary mb-2">Welcome Back</h1>
         <p className="text-muted-foreground">Sign in to TaskFlow Pro to continue</p>
